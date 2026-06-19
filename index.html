@@ -6,11 +6,12 @@
 <title>Cool Shape Explorer</title>
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <style>
-body { font-family: Arial, sans-serif; margin: 20px; }
-#plot { width: 100%; height: 80vh; }
+body { font-family: Arial, Helvetica, sans-serif; margin: 20px; background-color: #444;}
+#plot { width: 500px; height: 500px; }
 textarea { width: 100%; height: 90px; }
-button { margin: 4px; padding: 8px 12px; }
+button { margin: 4px; padding: 8px 12px; color: #ccc}
 .history { margin-top: 10px; }
+h2, h3 { color: #eee; font-family: Verdana, Geneva, Tahoma, sans-serif;}
 </style>
 </head>
 <body>
@@ -22,6 +23,9 @@ button { margin: 4px; padding: 8px 12px; }
 <button onclick="loadEquation()">View Pasted Equation</button>
 
 <textarea id="eq"></textarea>
+
+<h3>Raw Equation</h3>
+<pre id="rawEq"></pre>
 
 <div class="history">
 <h3>Last 5 Equations</h3>
@@ -88,6 +92,20 @@ function evalF(x,y,p){
     return Math.abs(p.m1*Math.abs(t1)+p.m4*Math.abs(t2)+p.c7);
 }
 
+function toRawString(p){
+    return `
+OUTER:
+|${p.m1}|
+  INNER A:
+  |${p.m2} |x${fmtSigned(p.c1)}| + ${p.m3} |y${fmtSigned(p.c2)}| + ${p.c3}|
+  INNER B:
+  |${p.m4}|
+    |${p.m5} |x${fmtSigned(p.c4)}| + ${p.m6} |y${fmtSigned(p.c5)}| + ${p.c6}|
+  + ${p.c7}
+R = ${p.R}
+`;
+}
+
 function draw(p){
     const n=250;
     const lim=12;
@@ -128,6 +146,7 @@ function randomize(){
     const s=toString(current);
     document.getElementById("eq").value = s;
     updateHistory(s);
+    document.getElementById("rawEq").textContent = toRawString(p);
     draw(current);
 }
 
