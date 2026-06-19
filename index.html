@@ -7,9 +7,9 @@
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <style>
 body { font-family: Arial, Helvetica, sans-serif; margin: 20px; background-color: #444;}
-#plot { width: 500px; height: 500px; color: #fff; background-color: #fff; margin-top: 20px; }
+#plot { width: 1500px; height: 1500px; color: #fff; background-color: #fff; margin-top: 20px; }
 textarea { width: 100%; height: 90px; }
-button { margin: 4px; padding: 8px 12px; color: #ccc}
+button { margin: 4px; padding: 8px 12px; color: #555; border-radius: 4px;}
 .history { margin-top: 10px; }
 h2, h3 { color: #eee; font-family: Verdana, Geneva, Tahoma, sans-serif;}
 #sliders { color: #eee; }
@@ -26,7 +26,7 @@ h2, h3 { color: #eee; font-family: Verdana, Geneva, Tahoma, sans-serif;}
 <textarea id="eq"></textarea>
 
 <h3>Raw Equation</h3>
-<pre id="rawEq"></pre>
+<textarea id="rawEq" readonly></textarea>
 
 <div class="history">
 <h3>Last 5 Equations</h3>
@@ -148,7 +148,7 @@ function randomize(){
     document.getElementById("eq").value = s;
     updateHistory(s);
     document.getElementById("rawEq").textContent = toRawString(p);
-    draw(current);
+    loadEquation();
 }
 
 function copyEquation(){
@@ -179,7 +179,7 @@ function loadEquation(){
         c3:Number(nums[8]),
         c4:Number(nums[9]),
         c5:Number(nums[10]),
-        c6:Number(nums[11]),
+        c6:Number(nums[11]),    
         c7:Number(nums[12]),
 
         R:Number(nums[13])
