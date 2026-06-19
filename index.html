@@ -30,6 +30,9 @@ button { margin: 4px; padding: 8px 12px; }
 
 <div id="plot"></div>
 
+<h3>Parameters</h3>
+<div id="sliders"></div>
+
 <script>
 let historyList = [];
 let current = null;
@@ -120,9 +123,10 @@ function draw(p){
 }
 
 function randomize(){
-    current=generateParams();
+    current = generateParams();
+    updateSliders();
     const s=toString(current);
-    document.getElementById("eq").value=s;
+    document.getElementById("eq").value = s;
     updateHistory(s);
     draw(current);
 }
@@ -132,9 +136,94 @@ function copyEquation(){
 }
 
 function loadEquation(){
-    alert("First version: graph reload parser not yet implemented. Paste is preserved and copy works. Parser can be added next.");
+
+    const s=document.getElementById("eq").value;
+
+    const nums=s.match(/[-+]?\d*\.?\d+/g);
+
+    if(!nums || nums.length!=14){
+        alert("Could not parse equation.");
+        return;
+    }
+
+    current={
+        m1:Number(nums[0]),
+        m2:Number(nums[1]),
+        m3:Number(nums[2]),
+        m4:Number(nums[3]),
+        m5:Number(nums[4]),
+        m6:Number(nums[5]),
+
+        c1:Number(nums[6]),
+        c2:Number(nums[7]),
+        c3:Number(nums[8]),
+        c4:Number(nums[9]),
+        c5:Number(nums[10]),
+        c6:Number(nums[11]),
+        c7:Number(nums[12]),
+
+        R:Number(nums[13])
+    };
+
+    updateHistory(s);
+
+    updateSliders();
+
+    draw(current);
+
 }
 
+const sliderNames=[
+"m1","m2","m3","m4","m5","m6",
+"c1","c2","c3","c4","c5","c6","c7","R"
+];
+
+function createSliders(){
+
+    const div=document.getElementById("sliders");
+
+    sliderNames.forEach(name=>{
+
+        const row=document.createElement("div");
+
+        row.innerHTML=`
+        <label>${name}</label>
+
+        <input
+        id="${name}"
+        type="range"
+        min="${name=="R"?0.5:-1}"
+        max="${name=="R"?4:1}"
+        step="${name=="R"?0.5:1}"
+        oninput="sliderChanged()">
+
+        <span id="${name}Value"></span>
+        `;
+
+        div.appendChild(row);
+
+    });
+
+}
+
+function updateSliders(){
+    sliderNames.forEach(name=>{
+        document.getElementById(name).value=current[name];
+        document.getElementById(name+"Value").innerText=current[name];
+    });
+}
+
+function sliderChanged(){
+    sliderNames.forEach(name=>{
+        current[name]=Number(document.getElementById(name).value);
+        document.getElementById(name+"Value").innerText=current[name];
+    });
+    const s=toString(current);
+    document.getElementById("eq").value=s;
+    draw(current);
+}
+
+createSliders();
 randomize();
 </script>
 
