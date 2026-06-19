@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cool Shape Explorer</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; }
+#plot { width: 100%; height: 80vh; }
+textarea { width: 100%; height: 90px; }
+button { margin: 4px; padding: 8px 12px; }
+.history { margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<h2>Cool Shape Explorer</h2>
+
+<button onclick="randomize()">Randomize Cool Shape</button>
+<button onclick="copyEquation()">Copy Equation</button>
+<button onclick="loadEquation()">View Pasted Equation</button>
+
+<textarea id="eq"></textarea>
+
+<div class="history">
+<h3>Last 5 Equations</h3>
+<div id="history"></div>
+</div>
+
+<div id="plot"></div>
+
+<script>
+let historyList = [];
+let current = null;
+
+function choice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+function generateParams(){
+    const vals=[-1,0,1];
+    return {
+        m1: choice([-1,1]),
+        m2: choice(vals),
+        m3: choice(vals),
+        m4: choice([-1,1]),
+        m5: choice(vals),
+        m6: choice(vals),
+        c1: choice(vals),
+        c2: choice(vals),
+        c3: choice(vals),
+        c4: choice(vals),
+        c5: choice(vals),
+        c6: choice(vals),
+        c7: choice(vals),
+        R: choice([0.5,1,1.5,2,2.5,3,4])
+    };
+}
+
+function fmtSigned(v){
+    return v>=0 ? "+"+v : ""+v;
+}
+
+function toString(p){
+return `\\left|${p.m1}\\left|${p.m2}\\left|x${fmtSigned(p.c1)}\\right|+${p.m3}\\left|y${fmtSigned(p.c2)}\\right|+${p.c3}\\right|+${p.m4}\\left|${p.m5}\\left|x${fmtSigned(p.c4)}\\right|+${p.m6}\\left|y${fmtSigned(p.c5)}\\right|+${p.c6}\\right|+${p.c7}\\right|=${p.R}`;
+}
+
+function updateHistory(str){
+    historyList.unshift(str);
+    historyList = historyList.slice(0,5);
+    const div=document.getElementById("history");
+    div.innerHTML="";
+    historyList.forEach(s=>{
+        const b=document.createElement("button");
+        b.textContent=s.substring(0,60)+"...";
+        b.onclick=()=>{
+            document.getElementById("eq").value=s;
+        };
+        div.appendChild(b);
+    });
+}
+
+function evalF(x,y,p){
+    const t1=p.m2*Math.abs(x+p.c1)+p.m3*Math.abs(y+p.c2)+p.c3;
+    const t2=p.m5*Math.abs(x+p.c4)+p.m6*Math.abs(y+p.c5)+p.c6;
+    return Math.abs(p.m1*Math.abs(t1)+p.m4*Math.abs(t2)+p.c7);
+}
+
+function draw(p){
+    const n=250;
+    const lim=12;
+    const xs=[];
+    const ys=[];
+    const z=[];
+
+    for(let i=0;i<n;i++){
+        let row=[];
+        let y=-lim+2*lim*i/(n-1);
+        ys.push(y);
+        for(let j=0;j<n;j++){
+            let x=-lim+2*lim*j/(n-1);
+            if(i===0) xs.push(x);
+            row.push(evalF(x,y,p)-p.R);
+        }
+        z.push(row);
+    }
+
+    Plotly.newPlot("plot",[{
+        x: xs,
+        y: ys,
+        z: z,
+        type:'contour',
+        contours:{start:0,end:0,size:1,coloring:'lines'},
+        line:{width:2}
+    }],{
+        title:'Graph',
+        xaxis:{scaleanchor:'y'},
+        yaxis:{},
+        margin:{t:40}
+    });
+}
+
+function randomize(){
+    current=generateParams();
+    const s=toString(current);
+    document.getElementById("eq").value=s;
+    updateHistory(s);
+    draw(current);
+}
+
+function copyEquation(){
+    navigator.clipboard.writeText(document.getElementById("eq").value);
+}
+
+function loadEquation(){
+    alert("First version: graph reload parser not yet implemented. Paste is preserved and copy works. Parser can be added next.");
+}
+
+randomize();
+</script>
+
+</body>
+</html>
