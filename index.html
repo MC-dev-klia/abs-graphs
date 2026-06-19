@@ -7,7 +7,7 @@
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <style>
 body { font-family: Arial, Helvetica, sans-serif; margin: 20px; background-color: #444;}
-#plot { width: 1500px; height: 1500px; color: #fff; background-color: #fff; margin-top: 20px; }
+#plot { width: 700px; height: 700px; color: #fff; background-color: #fff; margin-top: 20px; }
 textarea { width: 100%; height: 90px; }
 button { margin: 4px; padding: 8px 12px; color: #555; border-radius: 4px;}
 .history { margin-top: 10px; }
@@ -147,7 +147,7 @@ function randomize(){
     const s=toString(current);
     document.getElementById("eq").value = s;
     updateHistory(s);
-    document.getElementById("rawEq").textContent = toRawString(p);
+    document.getElementById("rawEq").value = toRawString(current);
     loadEquation();
 }
 
