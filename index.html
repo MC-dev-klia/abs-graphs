@@ -94,21 +94,11 @@ function evalF(x,y,p){
 }
 
 function toRawString(p){
-    return `
-OUTER:
-|${p.m1}|
-  INNER A:
-  |${p.m2} |x${fmtSigned(p.c1)}| + ${p.m3} |y${fmtSigned(p.c2)}| + ${p.c3}|
-  INNER B:
-  |${p.m4}|
-    |${p.m5} |x${fmtSigned(p.c4)}| + ${p.m6} |y${fmtSigned(p.c5)}| + ${p.c6}|
-  + ${p.c7}
-R = ${p.R}
-`;
+    return `|${p.m1}|(|${p.m2}|(x${fmtSigned(p.c1)})|+${p.m3}|(y${fmtSigned(p.c2)})|+${p.c3})|+${p.m4}|(|${p.m5}|(x${fmtSigned(p.c4)})|+${p.m6}|(y${fmtSigned(p.c5)})|+${p.c6})|+${p.c7}|=${p.R}`;
 }
 
 function draw(p){
-    const n=1000;
+    const n=500;
     const lim=12;
     const xs=[];
     const ys=[];
@@ -166,23 +156,25 @@ function loadEquation(){
         return;
     }
 
-    current={
-        m1:Number(nums[0]),
-        m2:Number(nums[1]),
-        m3:Number(nums[2]),
-        m4:Number(nums[3]),
-        m5:Number(nums[4]),
-        m6:Number(nums[5]),
+    current = {
+        m1: Number(nums[0]),
+        m2: Number(nums[1]),
+        c1: Number(nums[2]),
 
-        c1:Number(nums[6]),
-        c2:Number(nums[7]),
-        c3:Number(nums[8]),
-        c4:Number(nums[9]),
-        c5:Number(nums[10]),
-        c6:Number(nums[11]),    
-        c7:Number(nums[12]),
+        m3: Number(nums[3]),
+        c2: Number(nums[4]),
+        c3: Number(nums[5]),
 
-        R:Number(nums[13])
+        m4: Number(nums[6]),
+        m5: Number(nums[7]),
+        c4: Number(nums[8]),
+
+        m6: Number(nums[9]),
+        c5: Number(nums[10]),
+        c6: Number(nums[11]),
+
+        c7: Number(nums[12]),
+        R:  Number(nums[13])
     };
 
     updateHistory(s);
