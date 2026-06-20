@@ -94,7 +94,7 @@ function evalF(x,y,p){
 }
 
 function toRawString(p){
-    return `|${p.m1}|(|${p.m2}|(x${fmtSigned(p.c1)})|+${p.m3}|(y${fmtSigned(p.c2)})|+${p.c3})|+${p.m4}|(|${p.m5}|(x${fmtSigned(p.c4)})|+${p.m6}|(y${fmtSigned(p.c5)})|+${p.c6})|+${p.c7}|=${p.R}`;
+    return `|${p.m1}(|${p.m2}(|x${fmtSigned(p.c1)}|)+${p.m3}(|y${fmtSigned(p.c2)}|)+${p.c3}|)+${p.m4}(|${p.m5}(|x${fmtSigned(p.c4)}|)+${p.m6}(|y${fmtSigned(p.c5)}|)+${p.c6}|)+${p.c7}|=${p.R}`;
 }
 
 function draw(p){
